@@ -16,6 +16,9 @@ android {
         versionCode 1
         versionName "1.0"
 
+        buildConfigField("String", 'API_KEY', "$news_api_key")
+        buildConfigField("String", 'BASE_URL', "$base_url")
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -35,6 +38,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        buildConfig = true
     }
 }
 
