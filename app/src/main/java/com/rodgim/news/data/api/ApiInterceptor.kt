@@ -1,6 +1,7 @@
-package com.rodgim.news.data
+package com.rodgim.news.data.api
 
 import com.rodgim.news.BuildConfig
+import com.rodgim.news.data.Constants
 import okhttp3.Interceptor
 import okhttp3.Response
 

@@ -1,7 +1,7 @@
 package com.rodgim.news.di
 
 import com.rodgim.news.BuildConfig
-import com.rodgim.news.data.ApiInterceptor
+import com.rodgim.news.data.api.ApiInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,12 +16,12 @@ import javax.inject.Singleton
 @Module
 object RetrofitModule {
 
-    @Provides
     @Singleton
+    @Provides
     fun provideBaseUrl() = BuildConfig.BASE_URL
 
-    @Provides
     @Singleton
+    @Provides
     fun provideOkHttp(
         loggingInterceptor: HttpLoggingInterceptor,
         apiInterceptor: ApiInterceptor
@@ -34,14 +34,14 @@ object RetrofitModule {
         return okHttpClient.build()
     }
 
-    @Provides
     @Singleton
+    @Provides
     fun provideLoggingInterceptor() = HttpLoggingInterceptor().apply {
         setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 
-    @Provides
     @Singleton
+    @Provides
     fun provideApiInterceptor() = ApiInterceptor()
 
     @Singleton

@@ -1,4 +1,4 @@
-package com.rodgim.news.data
+package com.rodgim.news.data.api
 
 import retrofit2.http.GET
 import retrofit2.http.Query

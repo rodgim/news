@@ -1,4 +1,4 @@
-package com.rodgim.news.domain.models
+package com.rodgim.news.data.api.models
 
 data class NewsResponse(
     val articles: List<Article>,
