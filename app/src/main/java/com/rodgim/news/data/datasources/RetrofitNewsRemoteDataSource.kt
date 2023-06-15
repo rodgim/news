@@ -22,4 +22,20 @@ class RetrofitNewsRemoteDataSource(
             Result.failure(e)
         }
     }
+
+    override suspend fun searchNews(
+        searchQuery: String,
+        page: Int
+    ): Result<List<Article>> {
+        return try {
+            val response = newsApi.searchNews(searchQuery, page)
+            if (response.isSuccessful) {
+                Result.success(response.body()?.articles?.map { it.toDomain() } ?: emptyList())
+            } else {
+                Result.failure(Exception(response.message()))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
