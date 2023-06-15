@@ -10,7 +10,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import com.rodgim.news.R
 import com.rodgim.news.databinding.FragmentBreakingNewsBinding
+import com.rodgim.news.domain.models.Article
+import com.rodgim.news.ui.UIConstants
 import com.rodgim.news.ui.adapters.NewsAdapter
 import com.rodgim.news.ui.extensions.showToast
 import com.rodgim.news.ui.viewmodels.BreakingNewsUiModel
@@ -24,7 +28,7 @@ class BreakingNewsFragment : Fragment() {
     private lateinit var binding: FragmentBreakingNewsBinding
     private val newsAdapter: NewsAdapter by lazy {
         NewsAdapter { article ->
-
+            goToArticle(article)
         }
     }
     private val viewModel: BreakingNewsViewModel by viewModels()
@@ -74,5 +78,15 @@ class BreakingNewsFragment : Fragment() {
 
     private fun hideLoading() {
         binding.paginationProgressBar.isVisible = false
+    }
+
+    private fun goToArticle(article: Article) {
+        val bundle = Bundle().apply {
+            putParcelable(UIConstants.ARTICLE, article)
+        }
+        findNavController().navigate(
+            R.id.action_breakingNewsFragment_to_articleFragment,
+            bundle
+        )
     }
 }
