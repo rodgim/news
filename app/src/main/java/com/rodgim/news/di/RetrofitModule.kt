@@ -2,6 +2,9 @@ package com.rodgim.news.di
 
 import com.rodgim.news.BuildConfig
 import com.rodgim.news.data.api.ApiInterceptor
+import com.rodgim.news.data.api.NewsApi
+import com.rodgim.news.data.datasources.NewsRemoteDataSource
+import com.rodgim.news.data.datasources.RetrofitNewsRemoteDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -56,4 +59,12 @@ object RetrofitModule {
             .client(okHttpClient)
             .build()
     }
+
+    @Singleton
+    @Provides
+    fun provideNewsApi(retrofit: Retrofit): NewsApi = retrofit.create(NewsApi::class.java)
+
+    @Singleton
+    @Provides
+    fun providesNewsRemoteDataSource(newsApi: NewsApi): NewsRemoteDataSource = RetrofitNewsRemoteDataSource(newsApi)
 }

@@ -2,4 +2,8 @@
 <resources>
     <dimen name="bottom_navigation_height">80dp</dimen>
     <dimen name="floating_action_button_margin">32dp</dimen>
+    <dimen name="item_article_image_width">160dp</dimen>
+    <dimen name="item_article_image_height">90dp</dimen>
+    <dimen name="normal_margin">16dp</dimen>
+    <dimen name="small_margin">8dp</dimen>
 </resources>

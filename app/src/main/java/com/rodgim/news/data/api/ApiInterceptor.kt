@@ -7,8 +7,10 @@ import okhttp3.Response
 
 class ApiInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request().newBuilder()
-            .addHeader(Constants.API_KEY, BuildConfig.API_KEY)
+        val request = chain
+            .request()
+            .newBuilder()
+            .url(chain.request().url.newBuilder().addQueryParameter(Constants.API_KEY, BuildConfig.API_KEY).build())
             .build()
 
         return chain.proceed(request)
