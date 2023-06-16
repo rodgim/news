@@ -16,6 +16,7 @@ import com.rodgim.news.databinding.FragmentBreakingNewsBinding
 import com.rodgim.news.domain.models.Article
 import com.rodgim.news.ui.UIConstants
 import com.rodgim.news.ui.adapters.NewsAdapter
+import com.rodgim.news.ui.extensions.lastVisibleEvents
 import com.rodgim.news.ui.extensions.showToast
 import com.rodgim.news.ui.viewmodels.BreakingNewsUiModel
 import com.rodgim.news.ui.viewmodels.BreakingNewsViewModel
@@ -57,7 +58,9 @@ class BreakingNewsFragment : Fragment() {
                         }
                         is BreakingNewsUiModel.Load -> {
                             hideLoading()
-                            newsAdapter.submitList(it.articles)
+                            val currentList = newsAdapter.currentList.toMutableList()
+                            currentList.addAll(it.articles)
+                            newsAdapter.submitList(currentList)
                         }
                         BreakingNewsUiModel.Loading -> showLoading()
                     }
@@ -69,6 +72,14 @@ class BreakingNewsFragment : Fragment() {
     private fun setupRecyclerView() {
         binding.rvBreakingNews.apply {
             adapter = newsAdapter
+        }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                binding.rvBreakingNews.lastVisibleEvents.collect {
+                    viewModel.lastVisible.value = it
+                }
+            }
         }
     }
 

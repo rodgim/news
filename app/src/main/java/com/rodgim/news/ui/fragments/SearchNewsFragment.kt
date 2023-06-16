@@ -17,6 +17,7 @@ import com.rodgim.news.databinding.FragmentSearchNewsBinding
 import com.rodgim.news.domain.models.Article
 import com.rodgim.news.ui.UIConstants
 import com.rodgim.news.ui.adapters.NewsAdapter
+import com.rodgim.news.ui.extensions.lastVisibleEvents
 import com.rodgim.news.ui.extensions.showToast
 import com.rodgim.news.ui.viewmodels.SearchNewsUiModel
 import com.rodgim.news.ui.viewmodels.SearchNewsViewModel
@@ -66,7 +67,9 @@ class SearchNewsFragment : Fragment() {
                         }
                         is SearchNewsUiModel.Load -> {
                             hideLoading()
-                            newsAdapter.submitList(it.articles)
+                            val currentList = newsAdapter.currentList.toMutableList()
+                            currentList.addAll(it.articles)
+                            newsAdapter.submitList(currentList)
                         }
                         SearchNewsUiModel.Loading -> showLoading()
                     }
@@ -83,7 +86,8 @@ class SearchNewsFragment : Fragment() {
                 delay(SEARCH_TIME_DELAY)
                 editable?.let {
                     if (it.toString().isNotEmpty()) {
-                        viewModel.search(it.toString())
+                        newsAdapter.submitList(emptyList())
+                        viewModel.search.value = viewModel.search.value.copy(queryText = it.toString() ,page = 1)
                     }
                 }
             }
@@ -93,6 +97,14 @@ class SearchNewsFragment : Fragment() {
     private fun setupRecyclerView() {
         binding.rvSearchNews.apply {
             adapter = newsAdapter
+        }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                binding.rvSearchNews.lastVisibleEvents.collect {
+                    viewModel.search.value = viewModel.search.value.copy(page = it)
+                }
+            }
         }
     }
 

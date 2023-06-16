@@ -18,9 +18,21 @@ class SearchNewsViewModel @Inject constructor(
     private val _state = MutableStateFlow<SearchNewsUiModel>(SearchNewsUiModel.Load(emptyList()))
     val state = _state.asStateFlow()
 
-    suspend fun search(query: String) {
+    val search = MutableStateFlow(SearchRequestData(queryText = "", page = 1))
+
+    init {
         viewModelScope.launch {
-            val result = newsRepository.searchNews(query, 1)
+            search.collect {
+                if (it.queryText.isNotEmpty()) {
+                    search(it)
+                }
+            }
+        }
+    }
+
+    private suspend fun search(searchRequestData: SearchRequestData) {
+        viewModelScope.launch {
+            val result = newsRepository.searchNews(searchRequestData.queryText, searchRequestData.page)
             result.fold(
                 onSuccess = {
                     _state.value = SearchNewsUiModel.Load(it)
@@ -35,6 +47,11 @@ class SearchNewsViewModel @Inject constructor(
     }
 
 }
+
+data class SearchRequestData(
+    val queryText: String = "",
+    val page: Int = 1
+)
 
 sealed class SearchNewsUiModel {
     data class Load(val articles: List<Article>): SearchNewsUiModel()
