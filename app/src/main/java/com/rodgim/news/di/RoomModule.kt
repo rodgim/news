@@ -2,6 +2,9 @@ package com.rodgim.news.di
 
 import android.content.Context
 import androidx.room.Room
+import com.rodgim.news.data.datasources.NewsLocalDataSource
+import com.rodgim.news.data.datasources.RoomNewsLocalDataSource
+import com.rodgim.news.data.db.ArticleDao
 import com.rodgim.news.data.db.NewsDatabase
 import dagger.Module
 import dagger.Provides
@@ -28,4 +31,8 @@ object RoomModule {
     @Singleton
     @Provides
     fun provideArticleDao(newsDatabase: NewsDatabase) = newsDatabase.getArticleDao()
+
+    @Singleton
+    @Provides
+    fun provideNewsLocalDataSource(articleDao: ArticleDao): NewsLocalDataSource = RoomNewsLocalDataSource(articleDao)
 }

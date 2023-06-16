@@ -15,7 +15,7 @@ interface ArticleDao {
     suspend fun save(article: Article): Long
 
     @Query("SELECT * FROM articles")
-    fun getArticles(): Flow<List<Article>>
+    fun getSavedArticles(): Flow<List<Article>>
 
     @Delete
     suspend fun delete(article: Article)
