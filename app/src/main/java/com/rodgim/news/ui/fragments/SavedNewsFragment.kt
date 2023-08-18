@@ -74,7 +74,7 @@ class SavedNewsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect {
                     newsAdapter.submitList(it)
@@ -97,7 +97,7 @@ class SavedNewsFragment : Fragment() {
             putParcelable(UIConstants.ARTICLE, article)
         }
         findNavController().navigate(
-            R.id.action_breakingNewsFragment_to_articleFragment,
+            R.id.action_savedNewsFragment_to_articleFragment,
             bundle
         )
     }
