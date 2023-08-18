@@ -27,11 +27,7 @@ import kotlinx.coroutines.launch
 class BreakingNewsFragment : Fragment() {
 
     private lateinit var binding: FragmentBreakingNewsBinding
-    private val newsAdapter: NewsAdapter by lazy {
-        NewsAdapter { article ->
-            goToArticle(article)
-        }
-    }
+    private lateinit var newsAdapter: NewsAdapter
     private val viewModel: BreakingNewsViewModel by viewModels()
 
     override fun onCreateView(
@@ -48,8 +44,8 @@ class BreakingNewsFragment : Fragment() {
 
         setupRecyclerView()
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.state.collect {
                     when(it) {
                         is BreakingNewsUiModel.Error -> {
@@ -58,9 +54,7 @@ class BreakingNewsFragment : Fragment() {
                         }
                         is BreakingNewsUiModel.Load -> {
                             hideLoading()
-                            val currentList = newsAdapter.currentList.toMutableList()
-                            currentList.addAll(it.articles)
-                            newsAdapter.submitList(currentList)
+                            newsAdapter.submitList(it.articles)
                         }
                         BreakingNewsUiModel.Loading -> showLoading()
                     }
@@ -71,11 +65,14 @@ class BreakingNewsFragment : Fragment() {
 
     private fun setupRecyclerView() {
         binding.rvBreakingNews.apply {
+            newsAdapter = NewsAdapter { article ->
+                goToArticle(article)
+            }
             adapter = newsAdapter
         }
 
         lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 binding.rvBreakingNews.lastVisibleEvents.collect {
                     viewModel.lastVisible.value = it
                 }

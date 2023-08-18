@@ -17,6 +17,7 @@ class BreakingNewsViewModel @Inject constructor(
 
     private val _state = MutableStateFlow<BreakingNewsUiModel>(BreakingNewsUiModel.Loading)
     val state = _state.asStateFlow()
+    private var currentList: List<Article> = emptyList()
 
     val lastVisible = MutableStateFlow(1)
 
@@ -32,7 +33,8 @@ class BreakingNewsViewModel @Inject constructor(
         val result = newsRepository.getBreakingNews("us", lastVisible)
         result.fold(
             onSuccess = {
-                _state.value = BreakingNewsUiModel.Load(it)
+                currentList += it
+                _state.value = BreakingNewsUiModel.Load(currentList)
             },
             onFailure = {
                 it.message?.let { message ->
