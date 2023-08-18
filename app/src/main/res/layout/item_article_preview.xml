@@ -15,12 +15,16 @@
 
     <TextView
         android:id="@+id/tvSource"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/normal_margin"
-        android:textColor="@android:color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivArticleImage"/>
+        android:layout_marginStart="@dimen/small_margin"
+        android:textStyle="bold"
+        android:textColor="@color/deep_sky_blue"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivArticleImage"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/tvTitle"
@@ -28,33 +32,35 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/small_margin"
         android:ellipsize="end"
-        android:maxLines="3"
+        android:maxLines="2"
         android:textColor="@android:color/black"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/ivArticleImage"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/tvSource"/>
 
     <TextView
         android:id="@+id/tvDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/small_margin"
-        android:layout_marginTop="@dimen/normal_margin"
+        android:layout_marginTop="@dimen/small_margin"
         android:ellipsize="end"
-        android:maxLines="5"
-        android:textColor="@android:color/black"
+        android:maxLines="2"
+        android:textColor="@color/light_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/ivArticleImage"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"/>
 
     <TextView
         android:id="@+id/tvPublishedAt"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/small_margin"
-        android:textColor="@android:color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvSource"/>
+        android:layout_marginStart="@dimen/small_margin"
+        android:textColor="@color/light_gray"
+        app:layout_constraintStart_toEndOf="@id/ivArticleImage"
+        app:layout_constraintTop_toBottomOf="@id/tvDescription"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
