@@ -35,11 +35,7 @@ class SearchNewsFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentSearchNewsBinding
-    private val newsAdapter: NewsAdapter by lazy {
-        NewsAdapter { article ->
-            goToArticle(article)
-        }
-    }
+    private lateinit var newsAdapter: NewsAdapter
     private val viewModel: SearchNewsViewModel by viewModels()
 
     override fun onCreateView(
@@ -57,7 +53,7 @@ class SearchNewsFragment : Fragment() {
         setupRecyclerView()
         setupSearchEditText()
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect {
                     when(it) {
@@ -67,9 +63,7 @@ class SearchNewsFragment : Fragment() {
                         }
                         is SearchNewsUiModel.Load -> {
                             hideLoading()
-                            val currentList = newsAdapter.currentList.toMutableList()
-                            currentList.addAll(it.articles)
-                            newsAdapter.submitList(currentList)
+                            newsAdapter.submitList(it.articles)
                         }
                         SearchNewsUiModel.Loading -> showLoading()
                     }
@@ -85,7 +79,7 @@ class SearchNewsFragment : Fragment() {
             job = MainScope().launch {
                 delay(SEARCH_TIME_DELAY)
                 editable?.let {
-                    if (it.toString().isNotEmpty()) {
+                    if (it.toString().isNotEmpty() && viewModel.search.value.queryText != it.toString()) {
                         newsAdapter.submitList(emptyList())
                         viewModel.search.value = viewModel.search.value.copy(queryText = it.toString() ,page = 1)
                     }
@@ -96,10 +90,13 @@ class SearchNewsFragment : Fragment() {
 
     private fun setupRecyclerView() {
         binding.rvSearchNews.apply {
+            newsAdapter = NewsAdapter { article ->
+                goToArticle(article)
+            }
             adapter = newsAdapter
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 binding.rvSearchNews.lastVisibleEvents.collect {
                     viewModel.search.value = viewModel.search.value.copy(page = it)

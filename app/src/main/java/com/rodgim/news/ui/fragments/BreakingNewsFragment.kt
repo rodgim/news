@@ -45,7 +45,7 @@ class BreakingNewsFragment : Fragment() {
         setupRecyclerView()
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect {
                     when(it) {
                         is BreakingNewsUiModel.Error -> {
@@ -72,7 +72,7 @@ class BreakingNewsFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 binding.rvBreakingNews.lastVisibleEvents.collect {
                     viewModel.lastVisible.value = it
                 }
