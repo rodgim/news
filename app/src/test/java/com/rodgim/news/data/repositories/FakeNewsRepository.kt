@@ -39,8 +39,6 @@ class FakeNewsRepository : NewsRepository {
         savedNews.remove(article)
     }
 
-    fun getSavedNews() = savedNews
-
     fun hasInternetConnectivity(hasConnectivity: Boolean) {
         this.hasInternetConnectivity = hasConnectivity
     }

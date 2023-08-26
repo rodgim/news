@@ -6,6 +6,7 @@ import com.rodgim.news.MainDispatcherRule
 import com.rodgim.news.data.repositories.FakeNewsRepository
 import com.rodgim.news.data.repositories.fakeArticle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -38,7 +39,7 @@ class ArticleViewModelTest {
         viewModel.save(fakeArticle)
         advanceUntilIdle()
 
-        val result = fakeNewsRepository.getSavedNews().first()
+        val result = fakeNewsRepository.getSavedArticles().first().first()
 
         assertThat(result).isEqualTo(expectedResult)
     }
