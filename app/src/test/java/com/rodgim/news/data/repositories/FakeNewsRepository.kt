@@ -24,7 +24,14 @@ class FakeNewsRepository : NewsRepository {
     }
 
     override suspend fun searchNews(searchQuery: String, page: Int): Result<List<Article>> {
-        return Result.success(listOf(fakeArticle))
+        if (!hasInternetConnectivity) {
+            return Result.failure(UnknownHostException("UnknownHostException"))
+        }
+        return if (page == 1) {
+            Result.success(listOf(fakeArticle).filter { it.content.lowercase().contains(searchQuery.lowercase()) })
+        } else {
+            Result.success(listOf(fakeArticle.copy(id = 2)).filter { it.content.lowercase().contains(searchQuery.lowercase()) })
+        }
     }
 
     override fun getSavedArticles(): Flow<List<Article>> {

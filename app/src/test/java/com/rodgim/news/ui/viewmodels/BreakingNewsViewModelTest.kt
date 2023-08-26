@@ -34,7 +34,7 @@ class BreakingNewsViewModelTest {
     }
 
     @Test
-    fun `return list of articles`() = runTest {
+    fun `Return list of articles`() = runTest {
         val expectedResult = BreakingNewsUiModel.Load(listOf(fakeArticle))
 
         viewModel.getBreakingNews()
@@ -46,7 +46,7 @@ class BreakingNewsViewModelTest {
     }
 
     @Test
-    fun `when last visible change, return the next list of articles`() = runTest {
+    fun `When last visible change, return the next list of articles`() = runTest {
         val expectedResult = BreakingNewsUiModel.Load(listOf(fakeArticle, fakeArticle.copy(id = 2)))
 
         viewModel.getBreakingNews()
