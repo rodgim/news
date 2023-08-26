@@ -21,10 +21,12 @@ class BreakingNewsViewModel @Inject constructor(
 
     val lastVisible = MutableStateFlow(1)
 
-    init {
-        viewModelScope.launch {
-            lastVisible.collect {
-                notifyLastVisible(it)
+    fun getBreakingNews() {
+        if (lastVisible.value == 1 && _state.value == BreakingNewsUiModel.Loading) {
+            viewModelScope.launch {
+                lastVisible.collect {
+                    notifyLastVisible(it)
+                }
             }
         }
     }
@@ -33,6 +35,9 @@ class BreakingNewsViewModel @Inject constructor(
         val result = newsRepository.getBreakingNews("us", lastVisible)
         result.fold(
             onSuccess = {
+                if (lastVisible == 1) {
+                    currentList = emptyList()
+                }
                 currentList += it
                 _state.value = BreakingNewsUiModel.Load(currentList)
             },

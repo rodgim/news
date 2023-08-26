@@ -61,6 +61,8 @@ class BreakingNewsFragment : Fragment() {
                 }
             }
         }
+
+        loadInitialData()
     }
 
     private fun setupRecyclerView() {
@@ -78,6 +80,10 @@ class BreakingNewsFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun loadInitialData() {
+        viewModel.getBreakingNews()
     }
 
     private fun showLoading() {
