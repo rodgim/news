@@ -34,6 +34,15 @@ class BreakingNewsViewModelTest {
     }
 
     @Test
+    fun `The first state that shows is the loading`() = runTest {
+        val expectedResult = BreakingNewsUiModel.Loading
+
+        val state = viewModel.state.value
+
+        assertThat(state).isEqualTo(expectedResult)
+    }
+
+    @Test
     fun `Return list of articles`() = runTest {
         val expectedResult = BreakingNewsUiModel.Load(listOf(fakeArticle))
 
@@ -60,7 +69,7 @@ class BreakingNewsViewModelTest {
     }
 
     @Test
-    fun `When the app doesn't have an internet connection return an unknownHostException`() = runTest {
+    fun `When the app doesn't have an internet connection, return an unknownHostException`() = runTest {
         val unknownHostException = UnknownHostException("UnknownHostException")
         val expectedResult = BreakingNewsUiModel.Error(unknownHostException.message ?: "")
 

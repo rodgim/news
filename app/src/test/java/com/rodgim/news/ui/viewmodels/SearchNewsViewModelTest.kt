@@ -6,7 +6,10 @@ import com.rodgim.news.MainDispatcherRule
 import com.rodgim.news.data.repositories.FakeNewsRepository
 import com.rodgim.news.data.repositories.fakeArticle
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -41,6 +44,21 @@ class SearchNewsViewModelTest {
     }
 
     @Test
+    fun `Filter the list of articles by query, return the loading state`() = runTest {
+        val expectedResult = SearchNewsUiModel.Loading
+        val testResults = mutableListOf<SearchNewsUiModel>()
+
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.state.toList(testResults)
+        }
+
+        viewModel.search.value = SearchRequestData("Hurricane")
+        advanceUntilIdle()
+
+        assertThat(testResults.drop(1).first()).isEqualTo(expectedResult)
+    }
+
+    @Test
     fun `Filter the list of articles by query, return a list if the query matches an article`() = runTest {
         val expectedResult = SearchNewsUiModel.Load(listOf(fakeArticle))
 
@@ -65,7 +83,7 @@ class SearchNewsViewModelTest {
     }
 
     @Test
-    fun `when the last visible variable changes, return the next list of articles`() = runTest {
+    fun `When the last visible variable changes, return the next list of articles`() = runTest {
         val expectedResult = SearchNewsUiModel.Load(listOf(fakeArticle, fakeArticle.copy(id = 2)))
 
         viewModel.search.value = SearchRequestData("Hurricane")

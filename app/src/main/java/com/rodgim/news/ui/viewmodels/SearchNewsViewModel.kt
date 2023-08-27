@@ -33,6 +33,7 @@ class SearchNewsViewModel @Inject constructor(
 
     private suspend fun search(searchRequestData: SearchRequestData) {
         viewModelScope.launch {
+            _state.value = SearchNewsUiModel.Loading
             val result = newsRepository.searchNews(searchRequestData.queryText, searchRequestData.page)
             result.fold(
                 onSuccess = {
@@ -43,9 +44,7 @@ class SearchNewsViewModel @Inject constructor(
                     _state.value = SearchNewsUiModel.Load(currentList)
                 },
                 onFailure = {
-                    it.message?.let { message ->
-                        _state.value = SearchNewsUiModel.Error(message)
-                    }
+                    _state.value = SearchNewsUiModel.Error(it.message ?: "Unknown error")
                 }
             )
         }
