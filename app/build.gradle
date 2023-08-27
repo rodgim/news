@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'jacoco'
 }
 
 android {
@@ -25,6 +26,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -42,6 +46,18 @@ android {
         viewBinding true
         buildConfig = true
     }
+
+    tasks.withType(Test).configureEach {
+        jacoco.includeNoLocationClasses true
+        jacoco.excludes = ['jdk.internal.*']
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+        unitTests.includeAndroidResources = true
+    }
+
+    testCoverage.jacocoVersion = "0.8.10"
 }
 
 dependencies {
@@ -103,4 +119,65 @@ dependencies {
 
     debugImplementation "androidx.fragment:fragment-testing:1.6.1"
     debugImplementation "androidx.test:monitor:1.6.1"
+}
+
+tasks.register('jacocoTestReport', JacocoReport) {
+    dependsOn 'testDebugUnitTest'
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+
+    def androidExclusion = [
+            '**/databinding/**/*.*',
+            '**/android/databinding/*Binding.*',
+            '**/BR.*',
+            '**/R.*',
+            '**/R$*.*',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*_MembersInjector.*',
+            '**/Dagger*Component.*',
+            '**/Dagger*Component$Builder.*',
+            '**/*Hilt*',
+            '**/*hilt*',
+            '**/*Impl*',
+            '**/*Module_*Factory.*',
+            '**/*Fragment*.*',
+            '**/*Activity*.*',
+            '**/*Adapter*.*',
+            '**/*ViewPager*.*',
+            '**/*ViewHolder*.*',
+            '**/*Module*.*',
+            '**/*Interceptor*.*',
+            '**/*Database*.*'
+    ]
+
+    reports {
+        xml.getRequired().set(true)
+        html.getRequired().set(true)
+    }
+
+    classDirectories.from = files([
+            fileTree(
+                    // Java generated classes (debug build)
+                    dir: 'build/intermediates/javac/debug/classes',
+                    excludes: androidExclusion
+            ),
+            fileTree(
+                    // Kotlin generated classes (debug build)
+                    dir: 'build/tmp/kotlin-classes/debug',
+                    excludes: androidExclusion
+            )
+    ])
+    sourceDirectories.from = files('src/main/java/')
+    executionData.from = files('build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec')
+}
+
+configurations.configureEach {
+    resolutionStrategy {
+        eachDependency { details ->
+            if ('org.jacoco' == details.requested.group) {
+                details.useVersion "0.8.10"
+            }
+        }
+    }
 }
