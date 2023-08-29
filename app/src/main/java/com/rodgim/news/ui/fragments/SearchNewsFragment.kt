@@ -18,7 +18,7 @@ import com.rodgim.news.domain.models.Article
 import com.rodgim.news.ui.UIConstants
 import com.rodgim.news.ui.adapters.NewsAdapter
 import com.rodgim.news.ui.extensions.lastVisibleEvents
-import com.rodgim.news.ui.extensions.showToast
+import com.rodgim.news.ui.extensions.showSnackbar
 import com.rodgim.news.ui.viewmodels.SearchNewsUiModel
 import com.rodgim.news.ui.viewmodels.SearchNewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,7 +59,7 @@ class SearchNewsFragment : Fragment() {
                     when(it) {
                         is SearchNewsUiModel.Error -> {
                             hideLoading()
-                            showToast(it.message)
+                            showSnackbar(it.message)
                         }
                         is SearchNewsUiModel.Load -> {
                             hideLoading()

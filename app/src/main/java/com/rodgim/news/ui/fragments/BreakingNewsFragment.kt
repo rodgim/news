@@ -17,7 +17,7 @@ import com.rodgim.news.domain.models.Article
 import com.rodgim.news.ui.UIConstants
 import com.rodgim.news.ui.adapters.NewsAdapter
 import com.rodgim.news.ui.extensions.lastVisibleEvents
-import com.rodgim.news.ui.extensions.showToast
+import com.rodgim.news.ui.extensions.showSnackbar
 import com.rodgim.news.ui.viewmodels.BreakingNewsUiModel
 import com.rodgim.news.ui.viewmodels.BreakingNewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -50,7 +50,7 @@ class BreakingNewsFragment : Fragment() {
                     when(it) {
                         is BreakingNewsUiModel.Error -> {
                             hideLoading()
-                            showToast(it.message)
+                            showSnackbar(it.message)
                         }
                         is BreakingNewsUiModel.Load -> {
                             hideLoading()

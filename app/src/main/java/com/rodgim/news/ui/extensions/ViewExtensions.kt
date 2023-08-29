@@ -1,12 +1,12 @@
 package com.rodgim.news.ui.extensions
 
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.rodgim.news.ui.UIConstants
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -22,8 +22,8 @@ fun ImageView.loadImageFromUrl(url: String?) {
     }
 }
 
-fun Fragment.showToast(message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+fun Fragment.showSnackbar(message: String) {
+    view?.let { Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show() }
 }
 
 val RecyclerView.lastVisibleEvents: Flow<Int>
