@@ -22,16 +22,18 @@ android {
         buildConfigField("String", 'API_KEY', "$news_api_key")
         buildConfigField("String", 'BASE_URL', "$base_url")
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.rodgim.news.HiltTestRunner"
     }
 
     buildTypes {
         debug {
             testCoverageEnabled true
+            resValue("string", "clear_text_config","true")
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue("string", "clear_text_config","false")
         }
     }
     compileOptions {
