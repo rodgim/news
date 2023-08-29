@@ -16,7 +16,7 @@ class RetrofitNewsRemoteDataSource(
             if (response.isSuccessful) {
                 Result.success(response.body()?.articles?.map { it.toDomain() } ?: emptyList())
             } else {
-                Result.failure(Exception(response.message()))
+                Result.failure(Exception(response.errorBody()?.string() ?: response.message()))
             }
         } catch (e: Exception) {
             Result.failure(e)
@@ -32,7 +32,7 @@ class RetrofitNewsRemoteDataSource(
             if (response.isSuccessful) {
                 Result.success(response.body()?.articles?.map { it.toDomain() } ?: emptyList())
             } else {
-                Result.failure(Exception(response.message()))
+                Result.failure(Exception(response.errorBody()?.string() ?: response.message()))
             }
         } catch (e: Exception) {
             Result.failure(e)
